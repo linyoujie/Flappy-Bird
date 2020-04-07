@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity,StatusBar } from 'react-native';
 import Constants from './Constants';
 import {GameEngine} from 'react-native-game-engine';
 import Matter from 'matter-js';
@@ -30,6 +30,9 @@ export default class App extends Component {
     super(props);
     this.GameEngine = null
     this.entities = this.setupWorld();
+    this.state = {
+      running :true
+    }
   }
 
   setupWorld = () => {
@@ -52,6 +55,11 @@ export default class App extends Component {
 
     Matter.World.add(world, [bird, floor, ceiling, pipe1,pipe2,pipe3,pipe4]);
 
+    Matter.Events.on(engine, "collisionStart", (event)=> {
+      let pairs = event.pairs;
+
+      this.GameEngine.dispatch({type:"game-over"})
+    })
 
     return {
       physics: {engine: engine, world:world},
@@ -67,14 +75,40 @@ export default class App extends Component {
     }
   }
 
+  onEvent = (e) =>{
+    if (e.type === "game-over"){
+      this.setState({
+        running: false
+      })
+    }
+  }
+
+  reset =() => {
+    this.GameEngine.swap(this.setupWorld());
+    this.setState({
+      running:true
+    })}
+
   render() {
     return(
     <View style={styles.container}>
       <GameEngine
         ref = {(ref) => {this.GameEngine =ref;}}
         style = {styles.gameContainer}
+        running = {this.state.running}
         systems = {[Physics]}
-        entities = {this.entities} />
+        onEvent ={this.onEvent}
+        entities = {this.entities}>
+        <StatusBar hiden = {true} />
+        </GameEngine>
+      {!this.state.running && <TouchableOpacity onPress = {this.reset} style ={styles.fullscreenButton}>
+        <View style = {styles.fullscreen}>
+          <Text style = { styles.gameoverText}>Game Over</Text>
+
+        </View>
+
+      </TouchableOpacity>}
+      
     </View>
     )
   }
@@ -91,8 +125,40 @@ const styles = StyleSheet.create({
   },
 
   gameContainer: {
-    flex: 1,
-    backgroundColor: 'white',
+    position:'absolute',
+    top:0,
+    bottom:0,
+    left:0,
+    right:0
+
 
   },
+  fullscreen:{
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left:0,
+    right:0,
+    backgroundColor:'black',
+    opacity:0.8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    
+  },
+
+  fullscreenButton:{
+    position : 'absolute',
+    top: 0,
+    bottom:0,
+    left:0,
+    right:0,
+    flex:1,
+  },
+  gameoverText:{
+      color: 'white',
+      fontSize: 48,
+      justifyContent: 'center',
+  }
+
+
 });
