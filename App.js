@@ -41,7 +41,7 @@ export default class App extends Component {
 
     let bird = Matter.Bodies.rectangle(Constants.MAX_WIDTH/4, Constants.MAX_HEIGHT /2, 50,50)
     let floor = Matter.Bodies.rectangle(Constants.MAX_WIDTH/2, Constants.MAX_HEIGHT -25, Constants.MAX_WIDTH,50, {isStatic: true})
-    let ceiling = Matter.Bodies.rectangle(Constants.MAX_WIDTH/2, 25, Constants.MAX_WIDTH,50, {isStatic: true})
+    let ceiling = Matter.Bodies.rectangle(Constants.MAX_WIDTH/2, 0, Constants.MAX_WIDTH,1, {isStatic: true})
 
     let [pipe1Height, pipe2Height] = generatePipes();
     let pipe1 = Matter.Bodies.rectangle( Constants.MAX_WIDTH - (Constants.PIPE_WIDTH / 2), pipe1Height / 2, Constants.PIPE_WIDTH, pipe1Height, { isStatic: true });
@@ -65,7 +65,7 @@ export default class App extends Component {
       physics: {engine: engine, world:world},
       bird:{body: bird, size: [50,50], color: 'red', renderer:Bird},
       floor:{body: floor, size: [Constants.MAX_WIDTH,50], color: 'black', renderer:Wall},
-      ceiling:{body: ceiling, size: [Constants.MAX_WIDTH,50], color: 'green', renderer:Wall},
+      ceiling:{body: ceiling, size: [Constants.MAX_WIDTH,1], color: 'blue', renderer:Wall},
       pipe1:{body: pipe1, size: [Constants.PIPE_WIDTH,pipe1Height], color: 'green', renderer:Wall},
       pipe2:{body: pipe2, size: [Constants.PIPE_WIDTH,pipe2Height], color: 'green', renderer:Wall},
       pipe3:{body: pipe3, size: [Constants.PIPE_WIDTH,pipe3Height], color: 'green', renderer:Wall},
