@@ -1,5 +1,5 @@
 # Flappy-Bird
-All the code is simple, and should be readable.
+All the codes are simple, and should be readable.
 
 If you compile the program successfully, you should have something like the following:
 
